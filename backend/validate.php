@@ -1,7 +1,9 @@
 <?php
 $username = $_POST['username'];
-$email  = $_POST['email'];
+$email    = $_POST['email'];
 $password = $_POST['password'];
+
+if (!empty($username) && !empty($email) && !empty($password)) {
 
   $host = "localhost";
   $dbusername = "u994782675_Avis_portal";
@@ -36,5 +38,8 @@ $password = $_POST['password'];
   $stmt->close();
   $conn->close();
 
-
+} else {
+  echo "All fields are required";
+  exit;
+}
 ?>
