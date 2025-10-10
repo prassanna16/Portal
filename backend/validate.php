@@ -1,23 +1,52 @@
 <?php
-header('Content-Type: application/json');
-require_once '../includes/db.php';
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
-$data = json_decode(file_get_contents("php://input"), true);
-$field = $data['field'];
-$value = $data['value'];
+$username = $_POST['username'];
+$email  = $_POST['email'];
+$password = $_POST['password'];
 
-$allowedFields = ["username", "email"];
-if (!in_array($field, $allowedFields)) {
-  echo json_encode(["error" => "Invalid field"]);
+
+if (!empty($username) && !empty($email) && !empty($password)) {
+
+  }
+
+  $host = "localhost";
+  $dbusername = "u994782675_login_trail";
+  $dbpassword = "Avis@123456";
+  $dbname = "u994782675_login";
+
+  $conn = new mysqli($host, $dbusername, $dbpassword, $dbname);
+
+  if ($conn->connect_error) {
+    die('Connect Error (' . $conn->connect_errno . ') ' . $conn->connect_error);
+  }
+
+  $SELECT = "SELECT email FROM register WHERE email = ? LIMIT 1";
+  $INSERT = "INSERT INTO register (username, email, password) VALUES (?, ?, ?)";
+
+  $stmt = $conn->prepare($SELECT);
+  $stmt->bind_param("s", $email);
+  $stmt->execute();
+  $stmt->store_result();
+
+  if ($stmt->num_rows == 0) {
+    $stmt->close();
+    $stmt = $conn->prepare($INSERT);
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+    $stmt->bind_param("sss", $username, $email, $hashedPassword);
+    $stmt->execute();
+    echo "New record inserted successfully";
+  } else {
+    echo "Someone already registered using this email";
+  }
+
+  $stmt->close();
+  $conn->close();
+
+} else {
+  echo "All fields are required";
   exit;
 }
-
-$stmt = $conn->prepare("SELECT COUNT(*) FROM registration WHERE $field = ?");
-$stmt->bind_param("s", $value);
-$stmt->execute();
-$stmt->bind_result($count);
-$stmt->fetch();
-$stmt->close();
-
-echo json_encode(["unique" => $count == 0]);
 ?>
