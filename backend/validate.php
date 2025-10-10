@@ -13,9 +13,9 @@ if (!empty($username) && !empty($email) && !empty($password)) {
   }
 
   $host = "localhost";
-  $dbusername = "u994782675_login_trail";
+  $dbusername = "u994782675_Avis_portal";
   $dbpassword = "Avis@123456";
-  $dbname = "u994782675_login";
+  $dbname = "u994782675_portal";
 
   $conn = new mysqli($host, $dbusername, $dbpassword, $dbname);
 
