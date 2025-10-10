@@ -1,16 +1,7 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 $username = $_POST['username'];
 $email  = $_POST['email'];
 $password = $_POST['password'];
-
-
-if (!empty($username) && !empty($email) && !empty($password)) {
-
-  }
 
   $host = "localhost";
   $dbusername = "u994782675_Avis_portal";
@@ -23,8 +14,8 @@ if (!empty($username) && !empty($email) && !empty($password)) {
     die('Connect Error (' . $conn->connect_errno . ') ' . $conn->connect_error);
   }
 
-  $SELECT = "SELECT email FROM register WHERE email = ? LIMIT 1";
-  $INSERT = "INSERT INTO register (username, email, password) VALUES (?, ?, ?)";
+  $SELECT = "SELECT email FROM registration WHERE email = ? LIMIT 1";
+  $INSERT = "INSERT INTO registration (username, email, password) VALUES (?, ?, ?)";
 
   $stmt = $conn->prepare($SELECT);
   $stmt->bind_param("s", $email);
