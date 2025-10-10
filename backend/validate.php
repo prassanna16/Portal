@@ -36,8 +36,5 @@ $password = $_POST['password'];
   $stmt->close();
   $conn->close();
 
-} else {
-  echo "All fields are required";
-  exit;
-}
+
 ?>
