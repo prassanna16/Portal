@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
   function checkField(field, value) {
     if (!value.trim()) return;
 
-    fetch('php/register.php', {
+    fetch('../backend/register.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ check: field, [field]: value })

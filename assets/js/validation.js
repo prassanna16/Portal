@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Submit to register.php
-    fetch('php/register.php', {
+    fetch('../backend/register.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, email, password })
