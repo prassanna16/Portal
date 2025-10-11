@@ -16,11 +16,35 @@ if ($conn->connect_error) {
 
 // Get input data
 $input = json_decode(file_get_contents("php://input"), true);
+
+// Handle AJAX check requests
+if (isset($input['check'])) {
+  $field = $input['check'];
+  $value = trim($input[$field] ?? '');
+
+  if (!$value) {
+    echo json_encode(['error' => 'Missing value']);
+    exit;
+  }
+
+  $query = "SELECT COUNT(*) FROM registration WHERE $field = ?";
+  $stmt = $conn->prepare($query);
+  $stmt->bind_param("s", $value);
+  $stmt->execute();
+  $stmt->bind_result($count);
+  $stmt->fetch();
+  $stmt->close();
+
+  echo json_encode(['exists' => $count > 0]);
+  $conn->close();
+  exit;
+}
+
+// Handle full registration
 $username = trim($input['username'] ?? '');
 $email    = trim($input['email'] ?? '');
 $password = trim($input['password'] ?? '');
 
-// Validate input
 if (!$username || !$email || !$password) {
   echo json_encode(['error' => 'All fields are required']);
   exit;

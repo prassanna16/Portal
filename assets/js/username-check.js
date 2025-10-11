@@ -13,17 +13,35 @@ document.addEventListener('DOMContentLoaded', function () {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ check: field, [field]: value })
     })
-    .then(res => res.json())
-    .then(data => {
-      if (data.exists) showToast(`${field.charAt(0).toUpperCase() + field.slice(1)} already exists`);
+    .then(res => {
+      if (!res.ok) throw new Error(`Server responded with ${res.status}`);
+      return res.json();
     })
-    .catch(err => console.error('Error:', err));
+    .then(data => {
+      if (data.exists) {
+        showToast(`${capitalize(field)} already exists`, 'error');
+      } else {
+        showToast(`${capitalize(field)} is available`, 'success');
+      }
+    })
+    .catch(err => {
+      console.error('Error:', err);
+      showToast('Unable to check availability. Please try again.', 'error');
+    });
   }
 
-  function showToast(message) {
+  function showToast(message, type = 'error') {
     const toast = document.getElementById('toast');
     toast.textContent = message;
+    toast.className = type; // Use CSS classes like .error or .success
     toast.style.display = 'block';
-    setTimeout(() => toast.style.display = 'none', 3000);
+    setTimeout(() => {
+      toast.style.display = 'none';
+      toast.className = ''; // Reset class after hiding
+    }, 3000);
+  }
+
+  function capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
   }
 });
